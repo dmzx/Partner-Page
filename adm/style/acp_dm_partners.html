@@ -1,0 +1,95 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF S_ADD or S_EDIT -->
+<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+<!-- ENDIF -->
+<h1>{L_ACP_DMP_PARTNERS}</h1>
+
+<p>{L_ACP_DMP_PARTNERS_DESC}</p>
+<br	/>
+<!-- IF S_ADD or S_EDIT -->
+<h3><!-- IF S_ADD -->{L_ACP_DMP_TITLE_ADD}<!-- ELSE -->{L_ACP_DMP_TITLE_EDIT}<!-- ENDIF --></h3>
+<p><!-- IF S_ADD -->{L_ACP_DMP_ADD_EXPLAIN}<!-- ELSE -->{L_ACP_DMP_EDIT_EXPLAIN}<!-- ENDIF --></p>
+<form method="post" action="{U_ACTION}">
+	<p><input type="hidden" name="id" value="{ID}" /></p>
+	<fieldset>
+		<legend>{MODE_TITLE}</legend>
+		<dl>
+			<dt><label>{L_ACP_DMP_SITE}{L_COLON}</label><br /><span>{L_ACP_DMP_SITE_DESC}</span></dt>
+			<dd><input type="text" name="site" size="41" value="{SITE}" /></dd>
+		</dl>
+		<dl>
+			<dt><label>{L_ACP_DMP_DESC}{L_COLON}</label><br /><span>{L_ACP_DMP_DESC_DESC}</span></dt>
+			<dd><textarea rows="9" name="text" cols="52">{TEXT}</textarea></dd>
+		</dl>
+		<dl>
+			<dt><label>{L_ACP_DMP_SETTING}{L_COLON}</label><br /><span>{L_ACP_DMP_SETTING_DESC}</span><br /></dt>
+			<dd>{L_ACP_DMP_BB_SET}{L_COLON} <input type="checkbox" name="bb_set" value="1" {BB_SET} /> {L_ACP_DMP_SMILY_SET}{L_COLON} <input type="checkbox" name="smilie_set" value="1" {SMILIE_SET} /> {L_ACP_DMP_URL_SET}{L_COLON} <input type="checkbox" name="url_set" value="1" {URL_SET} /></dd>
+		</dl>
+		<dl>
+			<dt><label>{L_ACP_DMP_URL}{L_COLON}</label><br /><span>{L_ACP_DMP_URL_DESC}</span></dt>
+			<dd><input type="text" name="url" size="52" value="{URL}" /></dd>
+		</dl>
+		<dl>
+			<dt><label>{L_ACP_DMP_IMG}{L_COLON}</label><br /><span>{L_ACP_DMP_IMG_DESC}</span></dt>
+			<dd><input type="text" name="image" size="52" value="{IMG}" /></dd>
+		</dl>
+		<dl>
+			<dt><label>{L_ACP_DMP_SAVE_KLICK}{L_COLON}</label><br /><span>{L_ACP_DMP_SAVE_KLICK_DESC}</span></dt>
+			<dd><input type="checkbox" name="click_set" value="1" {CLICK_SET} /> &nbsp;&nbsp;<input type="text" name="clicks" maxlength="8" size="10" value="{CLICKS}" /></dd>
+		</dl>
+		<dl>
+			<dt><label>{L_ACP_DMP_AKTIV}{L_COLON}</label><br /><span>{L_ACP_DMP_AKTIV_DESC}</span></dt>
+			<dd><input type="checkbox" name="activ" value="1" {ACTIV} /> </dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" id="submit" name="save" value="{L_SUBMIT}" type="submit" />&nbsp;
+		<input class="button2" id="reset" name="reset" value="{L_RESET}" type="reset" />
+	</fieldset>
+</form>
+<br />
+<!-- ELSE -->
+<form id="add" method="post" action="{U_ACTION}">
+<fieldset class="tabulated">
+<legend>{L_ACP_DMP_TITLE_ADD}</legend>
+<p class="quick">
+	{S_HIDDEN_FIELDS}
+	<input class="button2" name="add" type="submit" value="{L_ACP_DMP_TITLE_ADD}" />
+</p>
+<table cellspacing="1">
+	<thead>
+		<tr>
+			<th>{L_ACP_DMP_SITE}</th>
+			<th>{L_ACP_DMP_URL}</th>
+			<th>{L_ACP_DMP_IMG}</th>
+			<th>{L_ACP_DMP_KLICKS}</th>
+			<th>{L_ACP_DMP_KLICKS_AKTIV}</th>
+			<th>{L_ACP_DMP_AKTIV}</th>
+			<th>{L_ACTION}</th>
+		</tr>
+	</thead>
+	<tbody>
+	<!-- BEGIN partners -->
+		<!-- IF partners.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td>{partners.TITLE}</td>
+		<td style="text-align: center;">{partners.URL} </td>
+		<td style="text-align: center;">{partners.IMG} </td>
+		<td style="text-align: center;">{partners.CLICKS}</td>
+		<td style="text-align: center;">{partners.CLICKS_EN}</td>
+			<td style="text-align: center;">{partners.ACTIV}</td>
+		<td>&nbsp;<a href="{partners.U_EDIT}">{ICON_EDIT}</a> <a href="{partners.U_DEL}">{ICON_DELETE}</a>&nbsp;</td>
+	</tr>
+	<!-- BEGINELSE -->
+	<tr class="row3">
+		<td colspan="7">{L_ACP_DMP_NO_ENTRY}</td>
+	</tr>
+	<!-- END partners -->
+	</tbody>
+</table>
+</form>
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

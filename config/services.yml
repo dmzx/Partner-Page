@@ -1,0 +1,30 @@
+imports:
+    - { resource: tables.yml }
+services:
+    dmzx.partner.listener:
+        class: dmzx\partner\event\listener
+        arguments:
+            - @user
+            - @template
+            - @dbal.conn
+            - @config
+            - @auth
+            - @controller.helper
+            - %core.root_path%
+            - %core.php_ext%
+            - %dmzx.partner.table%
+        tags:
+            - { name: event.listener }
+    dmzx.partner.controller:
+        class: dmzx\partner\controller\partner
+        arguments:
+            - @template
+            - @user
+            - @auth
+            - @dbal.conn
+            - @request
+            - @config
+            - @controller.helper
+            - %core.root_path%
+            - %core.php_ext%
+            - %dmzx.partner.table%
