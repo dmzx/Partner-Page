@@ -1,5 +1,7 @@
 # Partner Extension
 
+[![Build Status](https://travis-ci.org/dmzx/Partner-Page.svg?branch=master)](https://travis-ci.org/dmzx/Partner-Page)
+
 ## Install
 1. Download the latest release.
 2. In the `ext` directory of your phpBB board, create a new directory named `dmzx` (if it does not already exist).

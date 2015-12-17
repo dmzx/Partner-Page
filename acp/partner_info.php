@@ -10,10 +10,10 @@
 namespace dmzx\partner\acp;
 
 class partner_info
- {
+{
 	function module()
 	{
-		 return array(
+		return array(
 			'filename'		=> '\dmzx\partner\acp\partner_module',
 			'title'			=> 'ACP_DM_EDS',
 			'modes'			=> array(

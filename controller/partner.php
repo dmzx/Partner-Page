@@ -236,4 +236,4 @@ class partner
 
 		page_footer();
 	}
-}	
+}
