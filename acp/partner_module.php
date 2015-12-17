@@ -94,11 +94,11 @@ class partner_module
 					{
 					trigger_error($user->lang['ACP_DMP_NEED_DATA'] . adm_back_link($this->u_action));
 					}
-					elseif ($site == '')
+					else if ($site == '')
 					{
 					trigger_error($user->lang['ACP_DMP_NEED_SITE'] . adm_back_link($this->u_action));
 					}
-					elseif ($url == '')
+					else if ($url == '')
 					{
 					trigger_error($user->lang['ACP_DMP_NEED_URL'] . adm_back_link($this->u_action));
 					}

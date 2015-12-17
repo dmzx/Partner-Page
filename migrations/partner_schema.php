@@ -17,7 +17,7 @@ class partner_schema extends \phpbb\db\migration\migration
 			'add_tables'	=> array(
 				$this->table_prefix . 'dm_partners'	=> array(
 					'COLUMNS'	=> array(
-						'id'				=> array('UINT:10', NULL, 'auto_increment'),
+						'id'				=> array('UINT:10', null, 'auto_increment'),
 						'creator_id'		=> array('UINT:10', 0),
 						'title'				=> array('MTEXT_UNI', ''),
 						'url'				=> array('VCHAR', ''),

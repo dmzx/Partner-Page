@@ -137,11 +137,11 @@ class partner
 					{
 						trigger_error($this->user->lang['DMP_NEED_DATA']. $back_link);
 					}
-					elseif ($site == '')
+					else if ($site == '')
 					{
 						trigger_error($this->user->lang['DMP_NEED_SITE'] . $back_link);
 					}
-					elseif ($url == '')
+					else if ($url == '')
 					{
 						trigger_error($this->user->lang['DMP_NEED_URL'] . $back_link);
 					}
