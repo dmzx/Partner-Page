@@ -78,7 +78,7 @@ class listener implements EventSubscriberInterface
 			'core.page_header'		=> 'page_header',
 		);
 	}
-	
+
 	public function add_permission($event)
 	{
 		$permissions = $event['permissions'];
