@@ -18,7 +18,7 @@ class partner_install extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\phpbb\db\migration\data\v320\v320a1');
+		return array('\phpbb\db\migration\data\v31x\v311');
 	}
 
 	public function update_data()
