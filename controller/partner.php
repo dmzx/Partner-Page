@@ -56,7 +56,6 @@ class partner
 	* @param									$dm_partners_table
 	*
 	*/
-
 	public function __construct(\phpbb\template\template $template, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\config\config $config, \phpbb\controller\helper $helper, $phpbb_root_path, $phpEx, $dm_partners_table)
 	{
 		$this->template 			= $template;

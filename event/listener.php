@@ -57,7 +57,6 @@ class listener implements EventSubscriberInterface
 	* @param									$dm_partners_table
 	*
 	*/
-
 	public function __construct(\phpbb\user $user, \phpbb\template\template $template, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\controller\helper $helper, $phpbb_root_path, $phpEx, $dm_partners_table)
 	{
 		$this->user					= $user;
@@ -75,8 +74,17 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.user_setup'		=> 'load_language_on_setup',
+			'core.permissions'		=> 'add_permission',
 			'core.page_header'		=> 'page_header',
 		);
+	}
+	
+	public function add_permission($event)
+	{
+		$permissions = $event['permissions'];
+		$permissions['u_dm_partners_add'] = array('lang' => 'ACL_U_DM_PARTNERS_ADD', 'cat' => 'misc');
+		$permissions['u_dm_partners_view'] = array('lang' => 'ACL_U_DM_PARTNERS_VIEW', 'cat' => 'misc');
+		$event['permissions'] = $permissions;
 	}
 
 	public function load_language_on_setup($event)
@@ -128,7 +136,7 @@ class listener implements EventSubscriberInterface
 			'S_NEW_PARTNER'			=> $s_new_partner,
 			'U_PARTNERS'			=> $this->helper->route('dmzx_partner_controller'),
 			'L_PARTNERS'			=> $this->user->lang['PARTNERS'],
-			'U_ACP_PARTNER' 		=> ($this->auth->acl_get('a_') && !empty($this->user->data['is_registered'])) ? append_sid("{$this->phpbb_root_path}adm/index.$this->phpEx?sid=$user->session_id", false, true) : '',
+			'U_ACP_PARTNER' 		=> ($this->auth->acl_get('a_') && !empty($this->user->data['is_registered'])) ? append_sid($this->phpbb_root_path . 'adm/index.' . $this->phpEx . '?sid=' . $this->user->session_id, 'i=-dmzx-partner-acp-partner_module&mode=acp_dmp_config', true) : '',
 		));
 	}
 }

@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "This extension will add a partner page to your forum, where you can list your partners with a description and a logo.",
 	"homepage": "http://www.dmzx-web.net",
-	"version": "1.0.0",
+	"version": "1.0.3",
 	"time": "2015-10-25",
 	"keywords": ["phpbb", "extension", "partner"],
 	"license": "GPL-2.0",
