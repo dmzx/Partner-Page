@@ -1,53 +1,61 @@
-<!-- INCLUDE overall_header.html -->
+{% INCLUDE 'overall_header.html' %}
 
-<!-- IF S_ALLOW_VIEW -->
-<h2>{L_PARTNERS}</h2>
+{% if S_ALLOW_VIEW %}
+<h2>{{ lang('PARTNERS') }}</h2>
 
-<p>{L_DMP_DESC_FRONT}</p>
+<p>{{ lang('DMP_DESC_FRONT') }}</p>
 
-<!-- IF not .partners -->
-<br />
-<p><strong>{NO_ENTRY}</strong></p>
-<br /><br />
-<!-- ENDIF -->
+{% if not loops.partners|length %}
+<br>
+<p><strong>{{ NO_ENTRY }}</strong></p>
+<br><br>
+{% endif %}
 
-<!-- BEGIN partners -->
-<br />
+{% for partners in loops.partners %}
+<style type="text/css">
+	.partner{{ partners.S_ROW_ID }}{
+	background-image: url('{{ partners.BG_IMAGE }}');
+}
+</style>
+<br>
+{% EVENT dmzx_partners_body_before %}
 <div class="forabg">
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
-				<dl class="icon">
-					<dt>{partners.TITLE}</dt>
+				<dl class="row-item">
+					<dt>
+						<div class="list-inner">
+							{{ partners.TITLE }}
+						</div>
+					</dt>
 				</dl>
 			</li>
 		</ul>
-
 		<div class="panel">
 			<div class="inner">
 				<fieldset>
 					<dl>
-						<dt><span style="font-family: Verdana; font-size: 1.4em;"><a href="{partners.URL}" onclick="window.open(this.href); return false" title="{partners.TITLE}"><strong>{partners.TITLE}</strong></a></span><!-- IF partners.S_COUNT --><br />[{partners.COUNTER}]<!-- ENDIF --><br /><br />{partners.TEXT}<br /><br /></dt>
-						<!-- IF partners.S_IMAGE --><dd><div style="text-align: right;"><a href="{partners.URL}" onclick="window.open(this.href); return false"><img src="{partners.IMAGE}" alt="{partners.SITE}" title="{partners.SITE}" /></a><br /><br /></div></dd><!-- ENDIF -->
+						<dt><span class="partners-title"><a href="{{ partners.URL }}" onclick="window.open(this.href); return false" title="{{ partners.TITLE }}">{{ partners.TITLE }}</a></span>{% if partners.S_COUNT %}<br>[{{ partners.COUNTER }}]{% endif %}<br><br>{{ partners.TEXT }}<br><br></dt>
+						{% if partners.S_IMAGE %}<dd><div class="partners-logo partner{{ partners.S_ROW_ID }}"><a href="{{ partners.URL }}" onclick="window.open(this.href); return false"><img src="{{ partners.IMAGE }}" alt="{{ partners.SITE }}" title="{{ partners.SITE }}" class="partners-logo-img" /></a><br></div></dd>{% else %}<dd style="border: none"></dd>{% endif %}
 					</dl>
 				</fieldset>
-			</div>
+			 </div>
 		</div>
 	</div>
 </div>
-<!-- END partners -->
+{% endfor %}
 
-<!-- IF not S_IS_BOT and S_USER_LOGGED_IN and S_ALLOW_ADD -->
+{% if not S_IS_BOT and S_USER_LOGGED_IN and S_ALLOW_ADD %}
 <div class="buttons">
-	<a href="{U_ADD_IMG}" title="{L_DMP_ADD}" class="button icon-button partners-icon">{L_DMP_ADD}</a>
+	<a href="{{ U_ADD_IMG }}" title="{{ lang('DMP_ADD') }}" class="button icon-button partners-icon">{{ lang('DMP_ADD') }}</a>
 </div>
-<!-- ENDIF -->
-<br /><br />
-<!-- ELSE -->
-<br />
-{L_DMP_VIEW_NOT_ALLOWED}
-<br /><br />
-<!-- ENDIF -->
+{% endif %}
+<br><br>
+{% else %}
+<br>
+{{ lang('DMP_VIEW_NOT_ALLOWED') }}
+<br><br>
+{% endif %}
 
-<!-- INCLUDE dm_partners_footer.html -->
-<!-- INCLUDE overall_footer.html -->
+{% INCLUDE 'overall_footer.html' %}

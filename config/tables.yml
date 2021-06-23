@@ -1,2 +1,2 @@
 parameters:
-    dmzx.partner.table: %core.table_prefix%dm_partners    
+    dmzx.partner.table: '%core.table_prefix%dm_partners'    

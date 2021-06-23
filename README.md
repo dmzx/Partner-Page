@@ -1,6 +1,6 @@
 # Partner Extension
 
-[![Build Status](https://travis-ci.org/dmzx/Partner-Page.svg?branch=master)](https://travis-ci.org/dmzx/Partner-Page)
+[![Build Status](https://travis-ci.com/dmzx/Partner-Page.svg?branch=master)](https://travis-ci.com/dmzx/Partner-Page)
 
 ## Install
 1. Download the latest release.

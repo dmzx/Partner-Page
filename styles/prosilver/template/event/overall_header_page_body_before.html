@@ -1,7 +1,7 @@
-<!-- IF S_NEW_PARTNER -->
+{% if S_NEW_PARTNER %}
 	<div id="message" class="rules">
 		<div class="inner">
-			<strong>{L_INFORMATION}:</strong> <a href="{U_ACP_PARTNER}">{L_DMP_NEW_ENTRY}</a>
+			<strong>{{ lang('INFORMATION') ~ lang('COLON') }}</strong> <a href="{{ U_ACP_PARTNER }}">{{ lang('DMP_NEW_ENTRY') }}</a>
 		</div>
 	</div>
-<!-- ENDIF -->
+{% endif %}

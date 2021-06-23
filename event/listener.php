@@ -2,36 +2,39 @@
 /**
 *
 * @package phpBB Extension - Partner Page
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
 namespace dmzx\partner\event;
 
+use phpbb\auth\auth;
+use phpbb\config\config;
+use phpbb\controller\helper;
+use phpbb\db\driver\driver_interface;
+use phpbb\template\template;
+use phpbb\user;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
-* Event listener
-*/
 class listener implements EventSubscriberInterface
 {
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
-	/** @var \phpbb\template\template */
+	/** @var template */
 	protected $template;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var driver_interface */
 	protected $db;
 
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\auth\auth */
+	/** @var auth */
 	protected $auth;
 
-	/** @var \phpbb\controller\helper */
+	/** @var helper */
 	protected $helper;
 
 	/** @var string */
@@ -46,18 +49,28 @@ class listener implements EventSubscriberInterface
 	/**
 	* Constructor
 	*
-	* @param \phpbb\user						$user
-	* @param \phpbb\template\template			$template
-	* @param \phpbb\db\driver\driver_interface	$db
-	* @param \phpbb\config\config				$config
-	* @param \phpbb\auth\auth					$auth
-	* @param \phpbb\controller\helper			$helper
+	* @param user						$user
+	* @param template			$template
+	* @param driver_interface	$db
+	* @param config				$config
+	* @param auth					$auth
+	* @param helper			$helper
 	* @param									$phpbb_root_path
 	* @param									$phpEx
 	* @param									$dm_partners_table
 	*
 	*/
-	public function __construct(\phpbb\user $user, \phpbb\template\template $template, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\controller\helper $helper, $phpbb_root_path, $phpEx, $dm_partners_table)
+	public function __construct(
+		user $user,
+		template $template,
+		driver_interface $db,
+		config $config,
+		auth $auth,
+		helper $helper,
+		$phpbb_root_path,
+		$phpEx,
+		$dm_partners_table
+	)
 	{
 		$this->user					= $user;
 		$this->template				= $template;
@@ -72,36 +85,35 @@ class listener implements EventSubscriberInterface
 
 	static public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'core.user_setup'		=> 'load_language_on_setup',
 			'core.permissions'		=> 'add_permission',
 			'core.page_header'		=> 'page_header',
-		);
-	}
-
-	public function add_permission($event)
-	{
-		$permissions = $event['permissions'];
-		$permissions['u_dm_partners_add'] = array('lang' => 'ACL_U_DM_PARTNERS_ADD', 'cat' => 'misc');
-		$permissions['u_dm_partners_view'] = array('lang' => 'ACL_U_DM_PARTNERS_VIEW', 'cat' => 'misc');
-		$event['permissions'] = $permissions;
+        ];
 	}
 
 	public function load_language_on_setup($event)
 	{
 		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
+		$lang_set_ext[] = [
 			'ext_name' => 'dmzx/partner',
 			'lang_set' => 'common',
-		);
+        ];
 		$event['lang_set_ext'] = $lang_set_ext;
+	}
+
+	public function add_permission($event)
+	{
+		$permissions = $event['permissions'];
+		$permissions['u_dm_partners_add'] = ['lang' => 'ACL_U_DM_PARTNERS_ADD', 'cat' => 'misc'];
+		$permissions['u_dm_partners_view'] = ['lang' => 'ACL_U_DM_PARTNERS_VIEW', 'cat' => 'misc'];
+		$event['permissions'] = $permissions;
 	}
 
 	public function page_header($event)
 	{
-		global $user;
-
 		$l_new_partner = $s_new_partner = $new_entry = '';
+
 		if ($this->user->data['user_type'] == 3)
 		{
 			$l_new_partner = '';
@@ -131,12 +143,12 @@ class listener implements EventSubscriberInterface
 			}
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'L_DMP_NEW_ENTRY'		=> $l_new_partner,
 			'S_NEW_PARTNER'			=> $s_new_partner,
 			'U_PARTNERS'			=> $this->helper->route('dmzx_partner_controller'),
 			'L_PARTNERS'			=> $this->user->lang['PARTNERS'],
 			'U_ACP_PARTNER' 		=> ($this->auth->acl_get('a_') && !empty($this->user->data['is_registered'])) ? append_sid($this->phpbb_root_path . 'adm/index.' . $this->phpEx . '?sid=' . $this->user->session_id, 'i=-dmzx-partner-acp-partner_module&mode=acp_dmp_config', true) : '',
-		));
+        ]);
 	}
 }

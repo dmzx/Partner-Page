@@ -33,10 +33,6 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 $lang = array_merge($lang, [
-	'ACP_DMP_CONFIG'			=> 'Configuration',
-	'ACP_DMP_PARTNERS'			=> 'Partner Pages',
-	// Log entires
-	'LOG_DMP_DELETE'			=> 'Deleted partner <strong># %s</strong>',
-	'LOG_DMP_SAVE'				=> 'Edited partner <strong>%s</strong>',
-	'LOG_DMP_SAVE_NEW'			=> 'Added new partner <strong>%s</strong>',
+	'ACL_U_DM_PARTNERS_ADD'		=> 'Can add partners to Partner Page',
+	'ACL_U_DM_PARTNERS_VIEW'	=> 'Can view Partner Page',
 ]);

@@ -1,1 +1,3 @@
-<li class="small-icon icon-partners"><a href="{U_PARTNERS}" title="{L_DM_PARTNERS_EXPLAIN}">{L_PARTNERS}</a></li>
+{% if S_USER_LOGGED_IN %}
+<li data-last-responsive="true"><a href="{{ U_PARTNERS }}" title="{{ lang('DM_PARTNERS_EXPLAIN') }}" role="menuitem"><i class="icon fa fa-globe" aria-hidden="true"></i><span>{{ lang('PARTNERS') }}</span></a></li>
+{% endif %}

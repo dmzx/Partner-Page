@@ -2,34 +2,42 @@
 /**
 *
 * @package phpBB Extension - Partner Page
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
 namespace dmzx\partner\controller;
 
+use phpbb\auth\auth;
+use phpbb\config\config;
+use phpbb\controller\helper;
+use phpbb\db\driver\driver_interface;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
+
 class partner
 {
-	/** @var \phpbb\template\template */
+	/** @var template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
-	/** @var \phpbb\auth\auth */
+	/** @var auth */
 	protected $auth;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var driver_interface */
 	protected $db;
 
-	/** @var \phpbb\request\request */
+	/** @var request */
 	protected $request;
 
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\controller\helper */
+	/** @var helper */
 	protected $helper;
 
 	/** @var string */
@@ -44,19 +52,30 @@ class partner
 	/**
 	* Constructor
 	*
-	* @param \phpbb\template\template		 	$template
-	* @param \phpbb\user						$user
-	* @param \phpbb\auth\auth					$auth
-	* @param \phpbb\db\driver\driver_interface	$db
-	* @param \phpbb\request\request		 		$request
-	* @param \phpbb\config\config				$config
-	* @param \phpbb\controller\helper		 	$helper
+	* @param template		 	$template
+	* @param user						$user
+	* @param auth					$auth
+	* @param driver_interface	$db
+	* @param request		 		$request
+	* @param config				$config
+	* @param helper		 	$helper
 	* @param									$phpbb_root_path
 	* @param									$phpEx
 	* @param									$dm_partners_table
 	*
 	*/
-	public function __construct(\phpbb\template\template $template, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\config\config $config, \phpbb\controller\helper $helper, $phpbb_root_path, $phpEx, $dm_partners_table)
+	public function __construct(
+		template $template,
+		user $user,
+		auth $auth,
+		driver_interface $db,
+		request $request,
+		config $config,
+		helper $helper,
+		$phpbb_root_path,
+		$phpEx,
+		$dm_partners_table
+	)
 	{
 		$this->template 			= $template;
 		$this->user 				= $user;
@@ -76,25 +95,31 @@ class partner
 		include($this->phpbb_root_path . 'includes/bbcode.' . $this->phpEx);
 
 		$mode = $this->request->variable('mode', 'view', 'add');
-		$post = $this->request->get_super_global(\phpbb\request\request::POST);
-		$get = $this->request->get_super_global(\phpbb\request\request::GET);
+		$post = $this->request->get_super_global(request::POST);
+		$get = $this->request->get_super_global(request::GET);
 
-		if ( !$this->auth->acl_get('u_dm_partners_view') )
+		if (!$this->auth->acl_get('u_dm_partners_view'))
 		{
 			$message = $this->user->lang['NOT_AUTHORISED'];
-				trigger_error($message);
+			trigger_error($message);
 		}
 
-		if ( $mode == 'add' )
+		$sql = 'SELECT MAX(right_id) AS right_id
+				FROM ' . $this->dm_partners_table;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		if ($mode == 'add')
 		{
 			if (($this->user->data['is_bot']) || ($this->user->data['user_id'] == ANONYMOUS))
 			{
 				redirect(append_sid("{$this->phpbb_root_path}ucp.$this->phpEx?mode=login"));
 			}
 
-			if ( isset($post['submit']) )
+			if (isset($post['submit']))
 			{
-				$back_link = sprintf($this->user->lang['DMP_ADD_BACK_LINK'], "<a href=\"" .$this->helper->route('dmzx_partner_controller', array('mode' => 'add')) . "\">", "</a>");
+				$back_link = sprintf($this->user->lang['DMP_ADD_BACK_LINK'], "<a href=\"" .$this->helper->route('dmzx_partner_controller', ['mode' => 'add']) . "\">", "</a>");
 				$lang_mode = $this->user->lang['DMP_TITLE_ADD'];
 				$action = (!isset($get['action'])) ? '' : $get['action'];
 				$action = ((isset($post['submit']) && !$post['id']) ? 'add' : $action );
@@ -102,37 +127,15 @@ class partner
 				$site = $this->request->variable('site', '', true);
 				$url = $this->request->variable('url', '');
 				$creator_id = $this->user->data['user_id'];
-
-				//Settings
 				$text = $this->request->variable('text', '', true);
-				$uid = $bitfield = $options = '';
-				$allow_bbcode = $allow_urls = $allow_smilies = true;
-				generate_text_for_storage($text, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
 
-				//Make SQL Array
-				$sql_ary = array(
-					'title'				=> $site,
-					'text'				=> $text,
-					'bbcode_uid'		=> $uid,
-					'bbcode_bitfield'	=> $bitfield,
-					'enable_bbcode'		=> $allow_bbcode,
-					'enable_smilies'	=> $allow_smilies,
-					'enable_magic_url'	=> $allow_urls,
-					'enable_count'		=> $this->request->variable('click_set', 1),
-					'url'				=> $url,
-					'image_url'			=> $this->request->variable('image', ''),
-					'counter'			=> $this->request->variable('clicks', 1),
-					'activ'				=> $this->request->variable('activ', 0),
-					'creator_id'		=> $creator_id,
-				);
+				$this->template->assign_vars([
+					'S_POST_ACTION'			=> $this->helper->route('dmzx_partner_controller', ['mode' => 'add']),
+                ]);
 
-				$this->template->assign_vars(array(
-					'S_POST_ACTION'			=> $this->helper->route('dmzx_partner_controller', array('mode' => 'add')),
-				));
-
-				if ($site == '' || $url == '')
+				if ($site == '' || $url == '' || $text == '')
 				{
-					if ($site == '' && $url == '')
+					if ($site == '' && $url == '' && $text == '')
 					{
 						trigger_error($this->user->lang['DMP_NEED_DATA']. $back_link);
 					}
@@ -144,9 +147,37 @@ class partner
 					{
 						trigger_error($this->user->lang['DMP_NEED_URL'] . $back_link);
 					}
+					else if ($text == '')
+					{
+						trigger_error($this->user->lang['DMP_EMPTY_TEXT'] . $back_link);
+					}
 				}
 				else
 				{
+					$uid = $bitfield = $options = '';
+					$allow_bbcode = $allow_urls = $allow_smilies = true;
+					generate_text_for_storage($text, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
+
+					//Make SQL Array
+					$sql_ary = [
+						'title'				=> $site,
+						'left_id' 			=> $row['right_id'] + 1,
+						'right_id' 			=> $row['right_id'] + 2,
+						'text'				=> $text,
+						'bbcode_uid'		=> $uid,
+						'bbcode_bitfield'	=> $bitfield,
+						'enable_bbcode'		=> $allow_bbcode,
+						'enable_smilies'	=> $allow_smilies,
+						'enable_magic_url'	=> $allow_urls,
+						'enable_count'		=> $this->request->variable('click_set', 1),
+						'url'				=> $url,
+						'image_url'			=> $this->request->variable('image', ''),
+						'bg_url'			=> $this->request->variable('bg_image', ''),
+						'counter'			=> $this->request->variable('clicks', 1),
+						'activ'				=> $this->request->variable('activ', 0),
+						'creator_id'		=> $creator_id,
+                    ];
+
 					$this->db->sql_query('INSERT INTO ' . $this->dm_partners_table .' ' . $this->db->sql_build_array('INSERT', $sql_ary));
 					trigger_error($this->user->lang['DMP_ADDED'] . sprintf($this->user->lang['DMP_BACK_LINK'], "<a href=\"" . $this->helper->route('dmzx_partner_controller') . "\">", "</a>"));
 				}
@@ -169,15 +200,15 @@ class partner
 			break;
 
 			case 'view':
-				//Catch data from DB but only activ partners
-				$sql_array = array(
+				//Catch data from DB but only active partners
+				$sql_array = [
 					'SELECT'	=> '*',
-					'FROM'		=> array(
+					'FROM'		=> [
 				$this->dm_partners_table => 'p',
-				),
+                    ],
 					'WHERE'		=> 'activ <> 0',
-					'ORDER_BY'	=> 'title ASC',
-				);
+					'ORDER_BY'	=> 'left_id ASC',
+                ];
 				$sql = $this->db->sql_build_query('SELECT', $sql_array);
 				$result = $this->db->sql_query($sql);
 
@@ -188,30 +219,30 @@ class partner
 					$allow_urls = $row['enable_magic_url'];
 					$option = (($allow_bbcode) ? OPTION_FLAG_BBCODE : 0) + (($allow_smilies) ? OPTION_FLAG_SMILIES : 0) + (($allow_urls) ? OPTION_FLAG_LINKS : 0);
 
-					$image = array();
+					$image = [];
 					if ($row['text'] == '')
 					{
 						$row['text'] = $this->user->lang['DMP_EMPTY_TEXT'];
 					}
 
-					$this->template->assign_block_vars('partners', array(
+					$this->template->assign_block_vars('partners', [
 						'S_IMAGE'	=> ($row['image_url'] !== '') ? true : false,
 						'S_COUNT'	=> ($row['enable_count'] == 1) ? true : false,
 						'IMAGE'		=> $row['image_url'],
-						'URL'		=> ($row['enable_count'] == 1) ? $this->helper->route('dmzx_partner_controller', array('mode' => 'redirect' ,'id' => $row['id'])): $row['url'],
+						'BG_IMAGE'	=> $row['bg_url'],
+						'URL'		=> ($row['enable_count'] == 1) ? $this->helper->route('dmzx_partner_controller', ['mode' => 'redirect' ,'id' => $row['id']]): $row['url'],
 						'TITLE'		=> censor_text($row['title']),
 						'TEXT'		=> generate_text_for_display($row['text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $option),
 						'COUNTER'	=> ($row['counter'] == 1) ? $row['counter'].$this->user->lang['DMP_COUNT'] : number_format($row['counter'], 0, '.', '.').$this->user->lang['DMP_COUNTS'],
-						)
-					);
+						'S_ROW_ID'	=> (int) $row['id'],
+                    ]);
 				}
 
 				if (!$row)
 				{
-					$this->template->assign_vars(array(
+					$this->template->assign_vars([
 						'NO_ENTRY'	=> sprintf($this->user->lang['DMP_NO_ENTRY'], $this->config['sitename']),
-					)
-					);
+                    ]);
 				}
 
 				$this->db->sql_freeresult($result);
@@ -219,18 +250,17 @@ class partner
 			break;
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'ADD_IMG'		=> $this->user->img('button_partners', 'DMP_ADD'),
-			'U_ADD_IMG'		=> $this->helper->route('dmzx_partner_controller', array('mode' => 'add')),
+			'U_ADD_IMG'		=> $this->helper->route('dmzx_partner_controller', ['mode' => 'add']),
 			'S_ALLOW_ADD'	=> $this->auth->acl_get('u_dm_partners_add'),
 			'S_ALLOW_VIEW'	=> ($this->auth->acl_get('u_dm_partners_view')) ? true : false,
-			)
-		);
+        ]);
 
 		page_header($this->user->lang['PARTNERS']);
 
-		$this->template->set_filenames(array(
-			'body' => ($mode == 'add') ? 'dm_partners_add_body.html' : 'dm_partners_body.html')
+		$this->template->set_filenames([
+			'body' => ($mode == 'add') ? 'dm_partners_add_body.html' : 'dm_partners_body.html']
 		);
 
 		page_footer();

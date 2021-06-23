@@ -6,3 +6,39 @@
 	width: 96px; 
 	height: 25px; 
 }
+
+.partners-title {
+	font-family: Verdana;
+	font-size: 1.4em;
+	font-weight: bold;
+}
+
+.partners-logo {
+	text-align: center;
+	background-color: #1464B1;
+	padding: 10px;
+	margin: 5px;
+	-webkit-border-radius: 6px;
+	-o-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	border: 1px solid #999999;
+	box-shadow: 0 0 4px #000000;
+}
+
+img.partners-logo-img {
+	max-width: 500px;
+	max-height: 68px;
+}
+
+@media only screen and (max-width: 900px), only screen and (max-device-width: 900px) {
+	img.partners-logo-img {
+		max-width: 350px;
+	}
+}
+
+@media only screen and (max-width: 380px), only screen and (max-device-width: 380px) {
+	img.partners-logo-img {
+		max-width: 250px;
+	}
+}

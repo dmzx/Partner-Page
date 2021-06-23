@@ -1,54 +1,59 @@
-<!-- INCLUDE overall_header.html -->
+{% INCLUDE 'overall_header.html' %}
 
-<h2>{L_DMP_TITLE_ADD}</h2>
+<h2>{{ lang('DMP_TITLE_ADD') }}</h2>
 
-<p>{L_DMP_TITLE_ADD_DESC}</p>
-<br	/>
+<p>{{ lang('DMP_TITLE_ADD_DESC') }}</p>
+<br>
 <div class="forabg">
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
-				<dl class="icon">
-					<dt>{L_DMP_TITLE_ADD}</dt>
+				<dl class="row-item">
+					<dt>
+						<div class="list-inner">
+							{{ lang('DMP_TITLE_ADD') }}
+						</div>
+					</dt>
 				</dl>
 			</li>
 		</ul>
-
-		<form id="post" method="post" action="{U_ACTION}">
-		<div class="panel">
-			<div class="inner">
-					<p><input type="hidden" name="id" value="{ID}" /></p>
+		<form id="post" method="post" action="{{ U_ACTION }}">
+			<div class="panel">
+				<div class="inner">
+					<p><input type="hidden" name="id" value="{{ ID }}" /></p>
 					<fieldset>
 						<dl>
-							<dt><strong>{L_DMP_NEED}<br /><br /></strong></dt>
+							<dt><strong>{{ lang('DMP_NEED') }}<br><br></strong></dt>
 						</dl>
 						<dl>
-							<dt><strong>{L_DMP_SITE}{L_COLON}</strong><br />{L_DMP_SITE_DESC}</dt>
-							<dd><input type="text" name="site" size="41" value="{SITE}" /></dd>
+							<dt><strong>{{ lang('DMP_SITE') ~ lang('COLON') }}</strong><br>{{ lang('DMP_SITE_DESC') }}</dt>
+							<dd><input type="text" name="site" size="41" value="{{ SITE }}" /></dd>
 						</dl>
 						<dl>
-							<dt><strong>{L_DMP_DESC}{L_COLON}</strong><br /><span>{L_DMP_DESC_DESC}</span></dt>
-							<dd><br /><textarea rows="9" name="text" cols="52">{TEXT}</textarea></dd>
+							<dt><strong>{{ lang('DMP_DESC') ~ lang('COLON') }}</strong><br><span>{{ lang('DMP_DESC_DESC') }}</span></dt>
+							<dd><br><textarea rows="9" name="text" cols="52">{{ TEXT }}</textarea></dd>
 						</dl>
 						<dl>
-							<dt><br /><strong>{L_DMP_URL}{L_COLON}</strong><br /><span>{L_DMP_URL_DESC}</span></dt>
-							<dd><br /><input type="text" name="url" size="52" value="{URL}" /></dd>
+							<dt><br><strong>{{ lang('DMP_URL') ~ lang('COLON') }}</strong><br><span>{{ lang('DMP_URL_DESC') }}</span></dt>
+							<dd><br><input type="text" name="url" size="52" value="{{ URL }}" /></dd>
 						</dl>
 						<dl>
-							<dt><br /><strong>{L_DMP_IMG}{L_COLON}</strong><br /><span>{L_DMP_IMG_DESC}</span></dt>
-							<dd><br /><input type="text" name="image" size="52" value="{IMG}" /></dd>
+							<dt><br><strong>{{ lang('DMP_IMG') ~ lang('COLON') }}</strong><br><span>{{ lang('DMP_IMG_DESC') }}</span></dt>
+							<dd><br><input type="text" name="image" size="52" value="{{ IMG }}" /></dd>
+						</dl>
+						<dl>
+							<dt><label>{{ lang('DMP_BG_IMG') ~ lang('COLON') }}</label><br><span>{{ lang('DMP_BG_IMG_DESC') }}</span></dt>
+							<dd><input type="text" name="bg_image" size="52" value="{{ BG_IMG }}" /></dd>
 						</dl>
 					</fieldset>
 					<fieldset class="submit-buttons">
-						<input class="button1" id="submit" name="submit" value="{L_SUBMIT}" type="submit" />&nbsp;
-						<input class="button2" id="reset" name="reset" value="{L_RESET}" type="reset" />
+						<input class="button1" id="submit" name="submit" value="{{ lang('SUBMIT') }}" type="submit" />&nbsp;
+						<input class="button2" id="reset" name="reset" value="{{ lang('RESET') }}" type="reset" />
 					</fieldset>
+				</div>
 			</div>
-		</div>
 		</form>
 	</div>
 </div>
 
-<!-- INCLUDE dm_partners_footer.html -->
-<br /><br />
-<!-- INCLUDE overall_footer.html -->
+{% INCLUDE 'overall_footer.html' %}
